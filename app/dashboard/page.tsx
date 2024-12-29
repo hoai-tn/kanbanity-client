@@ -1,5 +1,4 @@
-import { AppSidebar } from "@/components/app-sidebar";
-
+import { AppSidebar } from "@/components/app-sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,17 +6,15 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-// import WorkspaceNav from "@/components/ui/Nav/WorkspaceNav";
-import { Separator } from "@/components/ui/separator";
+} from "@/components/ui/breadcrumb"
+import { Separator } from "@/components/ui/separator"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar";
-import React from "react";
+} from "@/components/ui/sidebar"
 
-const layout = ({ children }: { children: React.ReactNode }) => {
+export default function Page() {
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -42,17 +39,14 @@ const layout = ({ children }: { children: React.ReactNode }) => {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          {children}
-          {/* <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
             <div className="aspect-video rounded-xl bg-muted/50" />
             <div className="aspect-video rounded-xl bg-muted/50" />
             <div className="aspect-video rounded-xl bg-muted/50" />
           </div>
-          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" /> */}
+          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
         </div>
       </SidebarInset>
     </SidebarProvider>
-  );
-};
-
-export default layout;
+  )
+}
