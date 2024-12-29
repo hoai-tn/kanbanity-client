@@ -1,10 +1,10 @@
-import CompanyNav from "@/components/ui/Nav/CompanyNav";
+import WorkspaceNav from "@/components/ui/Nav/WorkspaceNav";
 import React from "react";
 
 const layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
-      <CompanyNav />
+      <WorkspaceNav />
       Company layout
       {children}
     </div>
