@@ -53,37 +53,37 @@ const data = {
   ],
   navMain: [
     {
-      title: "Search",
+      name: "Search",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       // items: [
       //   {
-      //     title: "History",
+      //     name: "History",
       //     url: "#",
       //   },
       //   {
-      //     title: "Starred",
+      //     name: "Starred",
       //     url: "#",
       //   },
       //   {
-      //     title: "Settings",
+      //     name: "Settings",
       //     url: "#",
       //   },
       // ],
     },
     {
-      title: "Home",
-      url: "#",
+      name: "Home",
+      url: "/123/home",
       icon: Bot,
     },
     {
-      title: "Docs",
+      name: "Docs",
       url: "#",
       icon: BookOpen,
     },
     {
-      title: "Inbox",
+      name: "Inbox",
       url: "#",
       icon: Settings2,
     },
@@ -91,7 +91,7 @@ const data = {
   projects: [
     {
       name: "Board",
-      url: "#",
+      url: "/123/b/123",
       icon: Frame,
     },
     {
@@ -114,7 +114,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavProjects projects={data.navMain} />
         <NavProjects projects={data.projects} />
         <ThemeMode />
       </SidebarContent>
