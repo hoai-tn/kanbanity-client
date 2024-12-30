@@ -1,9 +1,9 @@
-"use client"
+"use client";
 import { DndContext } from "@dnd-kit/core";
 import Column from "./column";
-import Card from "./card";
+import Task from "./task";
 import { useState } from "react";
-import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 export default function KanbanBoard() {
   const [columns, setColumns] = useState({
     "To Do": [
@@ -16,6 +16,7 @@ export default function KanbanBoard() {
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
+
     if (!over) return;
 
     const sourceColumn = Object.entries(columns).find(([_, items]) =>
@@ -41,8 +42,23 @@ export default function KanbanBoard() {
     }
   };
 
+  const handleDragStart = (event) => {
+    const { active } = event;
+    const sourceColumn = Object.entries(columns).find(([_, items]) =>
+      items.find((item) => item.id !== active.id)
+    );
+
+    const sourceItems = [...sourceColumn[1]].map((e) =>
+      e.id !== active.id ? e : { ...e, isDragging: "Dragging..." }
+    );
+
+    setColumns((prev) => ({
+      ...prev,
+      [sourceColumn[0]]: sourceItems,
+    }));
+  };
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
       <div style={{ display: "flex", gap: "16px", padding: "16px" }}>
         {Object.entries(columns).map(([title, items]) => (
           <SortableContext
@@ -52,7 +68,7 @@ export default function KanbanBoard() {
           >
             <Column title={title}>
               {items.map((item) => (
-                <Card key={item.id} id={item.id} content={item.content} />
+                <Task key={item.id} id={item.id} content={item.content} />
               ))}
             </Column>
           </SortableContext>
