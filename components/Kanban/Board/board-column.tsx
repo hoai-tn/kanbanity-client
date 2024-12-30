@@ -6,11 +6,12 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import SortableTask from "../sortable-task";
-import Task from "./task";
+import TaskCard from "./task-card";
+import { Task } from "@/types/kanban-board";
 
 interface ColumnProps {
   title: string;
-  tasks: any[];
+  tasks: Task[];
 }
 
 export default function BoardColumn({ title, tasks }: ColumnProps) {
@@ -34,7 +35,7 @@ export default function BoardColumn({ title, tasks }: ColumnProps) {
         >
           {tasks.map((item) => (
             <SortableTask key={item.id} id={item.id}>
-              <Task task={item} />
+              <TaskCard task={item} />
             </SortableTask>
           ))}
         </SortableContext>

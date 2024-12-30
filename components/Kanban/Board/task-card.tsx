@@ -6,7 +6,7 @@ interface TaskProps {
     content: string;
   };
 }
-export default function Task({ task }: TaskProps) {
+export default function TaskCard({ task }: TaskProps) {
   return (
     <Card className="text-foreground bg-gray-500">
       <CardContent>{task.content}</CardContent>

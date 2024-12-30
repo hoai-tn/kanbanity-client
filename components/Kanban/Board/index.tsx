@@ -1,22 +1,13 @@
 "use client";
 import { DndContext, DragOverEvent, DragOverlay } from "@dnd-kit/core";
-import Column from "./column";
-import Task from "./task";
 import { useMemo, useState } from "react";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import SortableTask from "../sortable-task";
 import BoardColumn from "./board-column";
+import { Column, Task } from "@/types/kanban-board";
+import TaskCard from "./task-card";
 
-interface Column {
-  id: string;
-  title: string;
-}
 
-interface Task {
-  id: string;
-  columnId: string;
-  content: string;
-}
 
 const defaultCols = [
   {
@@ -178,7 +169,7 @@ export default function KanbanBoard() {
         ))}
 
         <DragOverlay>
-          {activeTask ? <Task task={activeTask} /> : null}
+          {activeTask ? <TaskCard task={activeTask} /> : null}
         </DragOverlay>
       </div>
     </DndContext>
