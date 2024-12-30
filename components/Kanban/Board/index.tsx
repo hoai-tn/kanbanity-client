@@ -143,7 +143,7 @@ export default function KanbanBoard() {
     // if (task) setActiveTask(task);
   };
 
-  const getBoardSelection = (id) => {};
+  // const getBoardSelection = (id) => {};
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
   };
