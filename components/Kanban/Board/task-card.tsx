@@ -1,15 +1,15 @@
 import { Card, CardContent } from "@/components/ui/card";
 
-interface TaskProps {
+interface TaskCardProps {
   task: {
     id: string;
-    content: string;
+    title: string;
   };
 }
-export default function TaskCard({ task }: TaskProps) {
+export default function TaskCard({ task }: TaskCardProps) {
   return (
     <Card className="text-foreground bg-gray-500">
-      <CardContent>{task.content}</CardContent>
+      <CardContent>{task.title}</CardContent>
     </Card>
   );
 }

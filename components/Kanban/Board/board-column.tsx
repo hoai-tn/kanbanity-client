@@ -5,18 +5,19 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import SortableTask from "../sortable-task";
+import SortableTask from "./sortable-task";
 import TaskCard from "./task-card";
 import { Task } from "@/types/kanban-board";
 
 interface ColumnProps {
+  id: string;
   title: string;
   tasks: Task[];
 }
 
-export default function BoardColumn({ title, tasks }: ColumnProps) {
+export default function BoardColumn({ id, title, tasks }: ColumnProps) {
   const { setNodeRef } = useDroppable({
-    id: title,
+    id,
   });
 
   return (
@@ -25,11 +26,13 @@ export default function BoardColumn({ title, tasks }: ColumnProps) {
       className="flex-1 rounded-lg min-h-[300px] bg-background text-foreground"
     >
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>
+          {title} | {id}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <SortableContext
-          key={title}
+          key={id}
           items={tasks.map((item) => item.id)}
           strategy={verticalListSortingStrategy}
         >
