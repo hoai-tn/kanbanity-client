@@ -1,3 +1,4 @@
+
 import KanbanBoard from "@/components/Kanban/Board";
 import { ICompanyPageParams } from "@/types";
 import React from "react";

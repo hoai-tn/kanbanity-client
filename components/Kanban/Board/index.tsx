@@ -1,63 +1,167 @@
-"use client"
-import { DndContext } from "@dnd-kit/core";
-import Column from "./column";
-import Card from "./card";
-import { useState } from "react";
-import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
-export default function KanbanBoard() {
-  const [columns, setColumns] = useState({
-    "To Do": [
-      { id: "1", content: "Task 1" },
-      { id: "2", content: "Task 2" },
-    ],
-    "In Progress": [{ id: "3", content: "Task 3" }],
-    Done: [{ id: "4", content: "Task 4" }],
-  });
+"use client";
+import React, { useState } from "react";
+import {
+  DndContext,
+  closestCenter,
+  DragOverlay,
+  useSensor,
+  useSensors,
+  PointerSensor,
+  DragEndEvent,
+  DragOverEvent,
+  DragStartEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import BoardColumn from "./board-column";
+import TaskCard from "./task-card";
+import { Board, Task } from "@/types/kanban-board";
 
-  const handleDragEnd = (event) => {
+const initialData: Board = {
+  columns: [
+    {
+      id: "column-001",
+      title: "To Do",
+      tasks: [
+        { id: "task-001", title: "Set up Tailwind" },
+        { id: "task-002", title: "Learn React DND Kit" },
+      ],
+    },
+    {
+      id: "column-002",
+      title: "In Progress",
+      tasks: [
+        { id: "task-003", title: "Learn Nuxt" },
+        { id: "task-004", title: "Learn Vue" },
+      ],
+    },
+    {
+      id: "column-003",
+      title: "Done",
+      tasks: [],
+    },
+  ],
+};
+
+const KanbanBoard = () => {
+  const [board, setBoard] = useState<Board>(initialData);
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    })
+  );
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const { id } = event.active;
+    const column = board.columns.find((col) =>
+      col.tasks.some((task) => task.id === id)
+    );
+    const task = column?.tasks.find((task) => task.id === id) || null;
+    setActiveTask(task);
+  };
+
+  const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
     if (!over) return;
 
-    const sourceColumn = Object.entries(columns).find(([_, items]) =>
-      items.find((item) => item.id === active.id)
+    const activeColumn = board.columns.find((col) =>
+      col.tasks.some((task) => task.id === active.id)
     );
-    const destinationColumn = over.id;
+    const overColumn = board.columns.find((col) => col.id === over.id);
 
-    if (sourceColumn[0] !== destinationColumn) {
-      const sourceItems = [...sourceColumn[1]];
-      const destinationItems = [...columns[destinationColumn]];
+    if (activeColumn && overColumn && activeColumn !== overColumn) {
+      setBoard((prev) => {
+        const activeTask = activeColumn.tasks.find(
+          (task) => task.id === active.id
+        );
+        if (!activeTask) return prev;
 
-      const [movedItem] = sourceItems.splice(
-        sourceItems.findIndex((item) => item.id === active.id),
-        1
-      );
-      destinationItems.push(movedItem);
-
-      setColumns((prev) => ({
-        ...prev,
-        [sourceColumn[0]]: sourceItems,
-        [destinationColumn]: destinationItems,
-      }));
+        return {
+          columns: prev.columns.map((col) => {
+            if (col === activeColumn) {
+              return {
+                ...col,
+                tasks: col.tasks.filter((task) => task.id !== active.id),
+              };
+            } else if (col === overColumn) {
+              return {
+                ...col,
+                tasks: [...col.tasks, activeTask],
+              };
+            }
+            return col;
+          }),
+        };
+      });
     }
   };
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over) return;
+
+    const column = board.columns.find((col) =>
+      col.tasks.some((task) => task.id === active.id)
+    );
+
+    if (column) {
+      const activeIndex = column.tasks.findIndex(
+        (task) => task.id === active.id
+      );
+      const overIndex = column.tasks.findIndex((task) => task.id === over.id);
+
+      if (activeIndex !== overIndex) {
+        setBoard((prev) => ({
+          columns: prev.columns.map((col) => {
+            if (col === column) {
+              return {
+                ...col,
+                tasks: arrayMove(col.tasks, activeIndex, overIndex),
+              };
+            }
+            return col;
+          }),
+        }));
+      }
+    }
+    setActiveTask(null);
+  };
+
   return (
-    <DndContext onDragEnd={handleDragEnd}>
-      <div style={{ display: "flex", gap: "16px", padding: "16px" }}>
-        {Object.entries(columns).map(([title, items]) => (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="flex space-x-4 p-4">
+        {board.columns.map((column) => (
           <SortableContext
-            key={title}
-            items={items.map((item) => item.id)}
-            strategy={rectSortingStrategy}
+            key={column.id}
+            items={column.tasks.map((task) => task.id)}
+            strategy={verticalListSortingStrategy}
           >
-            <Column title={title}>
-              {items.map((item) => (
-                <Card key={item.id} id={item.id} content={item.content} />
-              ))}
-            </Column>
+            <BoardColumn
+              id={column.id}
+              title={column.title}
+              tasks={column.tasks}
+            />
           </SortableContext>
         ))}
       </div>
+      <DragOverlay>
+        {activeTask ? <TaskCard task={activeTask} /> : null}
+      </DragOverlay>
     </DndContext>
   );
-}
+};
+
+export default KanbanBoard;
