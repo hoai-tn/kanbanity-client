@@ -19,6 +19,7 @@ import {
 import BoardColumn from "./board-column";
 import TaskCard from "./task-card";
 import { Board, Task } from "@/types/kanban-board";
+import _ from "lodash";
 
 const initialData: Board = {
   columns: [
@@ -60,11 +61,13 @@ const KanbanBoard = () => {
 
   const handleDragStart = (event: DragStartEvent) => {
     const { id } = event.active;
-    const column = board.columns.find((col) =>
-      col.tasks.some((task) => task.id === id)
-    );
-    const task = column?.tasks.find((task) => task.id === id) || null;
-    setActiveTask(task);
+    const task = _.reduce(
+      board.columns,
+      (acc, col) => acc.concat(col.tasks),
+      [] as Task[]
+    ).find((task) => task.id === id);
+
+    setActiveTask(task || null);
   };
 
   const handleDragOver = (event: DragOverEvent) => {
@@ -75,6 +78,7 @@ const KanbanBoard = () => {
       col.tasks.some((task) => task.id === active.id)
     );
     const overColumn = board.columns.find((col) => col.id === over.id);
+    console.log(activeColumn?.title, overColumn?.title);
 
     if (activeColumn && overColumn && activeColumn !== overColumn) {
       setBoard((prev) => {
