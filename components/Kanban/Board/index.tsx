@@ -20,6 +20,7 @@ import BoardColumn from "./board-column";
 import TaskCard from "./task-card";
 import { Board, Task } from "@/types/kanban-board";
 import _ from "lodash";
+import SortableTask from "./sortable-task";
 
 const initialData: Board = {
   columns: [
@@ -61,6 +62,9 @@ const KanbanBoard = () => {
 
   const handleDragStart = (event: DragStartEvent) => {
     const { id } = event.active;
+    const data = event.active.data.current
+    console.log(data);
+    
     const task = _.reduce(
       board.columns,
       (acc, col) => acc.concat(col.tasks),
@@ -74,37 +78,37 @@ const KanbanBoard = () => {
     const { active, over } = event;
     if (!over) return;
 
-    const activeColumn = board.columns.find((col) =>
-      col.tasks.some((task) => task.id === active.id)
-    );
-    const overColumn = board.columns.find((col) => col.id === over.id);
-    console.log(activeColumn?.title, overColumn?.title);
+    // const activeColumn = board.columns.find((col) =>
+    //   col.tasks.some((task) => task.id === active.id)
+    // );
+    // const overColumn = board.columns.find((col) => col.id === over.id);
+    // console.log(activeColumn?.title, overColumn?.title);
+    // // Check if the task is dragged from one column to another
+    // if (activeColumn && overColumn && activeColumn !== overColumn) {
+    //   setBoard((prev) => {
+    //     const activeTask = activeColumn.tasks.find(
+    //       (task) => task.id === active.id
+    //     );
+    //     if (!activeTask) return prev;
 
-    if (activeColumn && overColumn && activeColumn !== overColumn) {
-      setBoard((prev) => {
-        const activeTask = activeColumn.tasks.find(
-          (task) => task.id === active.id
-        );
-        if (!activeTask) return prev;
-
-        return {
-          columns: prev.columns.map((col) => {
-            if (col === activeColumn) {
-              return {
-                ...col,
-                tasks: col.tasks.filter((task) => task.id !== active.id),
-              };
-            } else if (col === overColumn) {
-              return {
-                ...col,
-                tasks: [...col.tasks, activeTask],
-              };
-            }
-            return col;
-          }),
-        };
-      });
-    }
+    //     return {
+    //       columns: prev.columns.map((col) => {
+    //         if (col === activeColumn) {
+    //           return {
+    //             ...col,
+    //             tasks: col.tasks.filter((task) => task.id !== active.id),
+    //           };
+    //         } else if (col === overColumn) {
+    //           return {
+    //             ...col,
+    //             tasks: [...col.tasks, activeTask],
+    //           };
+    //         }
+    //         return col;
+    //       }),
+    //     };
+    //   });
+    // }
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -151,7 +155,7 @@ const KanbanBoard = () => {
           <SortableContext
             key={column.id}
             items={column.tasks.map((task) => task.id)}
-            strategy={verticalListSortingStrategy}
+            // strategy={verticalListSortingStrategy}
           >
             <BoardColumn
               id={column.id}
@@ -162,7 +166,11 @@ const KanbanBoard = () => {
         ))}
       </div>
       <DragOverlay>
-        {activeTask ? <TaskCard task={activeTask} /> : null}
+        {activeTask ? (
+          <SortableTask task={activeTask} isOverlay>
+            <TaskCard task={activeTask} />
+          </SortableTask>
+        ) : null}
       </DragOverlay>
     </DndContext>
   );
