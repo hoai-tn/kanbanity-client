@@ -36,7 +36,7 @@ export default function BoardColumn({ id, title, tasks }: ColumnProps) {
             {title} | {id}
           </CardTitle>
         </CardHeader>
-        <CardContent className="bg-gray-100 h-full">
+        <CardContent>
           {tasks.map((item) => (
             <SortableTask task={item} key={item.id}>
               <TaskCard task={item} />

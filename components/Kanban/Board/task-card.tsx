@@ -9,7 +9,7 @@ interface TaskCardProps {
 export default function TaskCard({ task }: TaskCardProps) {
   return (
     <Card className="text-foreground bg-gray-500">
-      <CardContent>{task.title}</CardContent>
+      <CardContent>{task.title} | {task.id}</CardContent>
     </Card>
   );
 }

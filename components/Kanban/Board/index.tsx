@@ -10,6 +10,8 @@ import {
   DragEndEvent,
   DragOverEvent,
   DragStartEvent,
+  TouchSensor,
+  MouseSensor,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -21,6 +23,7 @@ import TaskCard from "./task-card";
 import { Board, Task } from "@/types/kanban-board";
 import _ from "lodash";
 import SortableTask from "./sortable-task";
+import { hasDraggableData } from "@/lib/utils";
 
 const initialData: Board = {
   columns: [
@@ -53,30 +56,32 @@ const KanbanBoard = () => {
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 5,
-      },
-    })
+    useSensor(MouseSensor),
+    useSensor(TouchSensor),
   );
 
   const handleDragStart = (event: DragStartEvent) => {
     const { id } = event.active;
-    const data = event.active.data.current
-    console.log(data);
-    
-    const task = _.reduce(
-      board.columns,
-      (acc, col) => acc.concat(col.tasks),
-      [] as Task[]
-    ).find((task) => task.id === id);
-
-    setActiveTask(task || null);
+    const data = event.active.data.current;
+    if (data.type === "Task") setActiveTask(data.task);
+    // const task = _.reduce(
+    //   board.columns,
+    //   (acc, col) => acc.concat(col.tasks),
+    //   [] as Task[]
+    // ).find((task) => task.id === id);
   };
 
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
     if (!over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+
+    if (activeId === overId) return;
+
+    if (!hasDraggableData(active) || !hasDraggableData(over)) return;
+    console.log(activeId, overId);
 
     // const activeColumn = board.columns.find((col) =>
     //   col.tasks.some((task) => task.id === active.id)
@@ -145,8 +150,8 @@ const KanbanBoard = () => {
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragStart={handleDragStart}
+      // collisionDetection={closestCenter}
+      // onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
@@ -165,13 +170,13 @@ const KanbanBoard = () => {
           </SortableContext>
         ))}
       </div>
-      <DragOverlay>
+      {/* <DragOverlay>
         {activeTask ? (
           <SortableTask task={activeTask} isOverlay>
             <TaskCard task={activeTask} />
           </SortableTask>
         ) : null}
-      </DragOverlay>
+      </DragOverlay> */}
     </DndContext>
   );
 };
