@@ -2,7 +2,9 @@
 import { useDroppable } from "@dnd-kit/core";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  rectSortingStrategy,
   SortableContext,
+  useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import SortableTask from "./sortable-task";
@@ -16,33 +18,32 @@ interface ColumnProps {
 }
 
 export default function BoardColumn({ id, title, tasks }: ColumnProps) {
-  const { setNodeRef } = useDroppable({
+  const { setNodeRef } = useSortable({
     id,
   });
-
+  const tasksIds = tasks.map((item) => item.id);
   return (
-    <Card
-      ref={setNodeRef}
-      className="flex-1 rounded-lg min-h-[300px] bg-background text-foreground"
+    <SortableContext
+      items={tasksIds}
+      // strategy={rectSortingStrategy}
     >
-      <CardHeader>
-        <CardTitle>
-          {title} | {id}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <SortableContext
-          key={id}
-          items={tasks.map((item) => item.id)}
-          strategy={verticalListSortingStrategy}
-        >
+      <Card
+        ref={setNodeRef}
+        className="flex-1 rounded-lg min-h-[300px] bg-background text-foreground"
+      >
+        <CardHeader>
+          <CardTitle>
+            {title} | {id}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
           {tasks.map((item) => (
-            <SortableTask key={item.id} id={item.id}>
+            <SortableTask task={item} key={item.id}>
               <TaskCard task={item} />
             </SortableTask>
           ))}
-        </SortableContext>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </SortableContext>
   );
 }

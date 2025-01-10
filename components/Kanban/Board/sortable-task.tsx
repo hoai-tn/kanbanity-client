@@ -1,13 +1,16 @@
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { cva } from "class-variance-authority";
+import { Task } from "@/types/kanban-board";
 
 type SortableTaskProps = {
   children: React.ReactNode;
-  id: string;
+  task: Task;
+  isOverlay?: boolean;
 };
 
-const SortableTask = ({ children, id }: SortableTaskProps) => {
+const SortableTask = ({ children, task, isOverlay }: SortableTaskProps) => {
   const {
     attributes,
     listeners,
@@ -15,16 +18,30 @@ const SortableTask = ({ children, id }: SortableTaskProps) => {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id });
+  } = useSortable({ id: task.id, data: { task, type: "Task" } });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0 : 1,
   };
-
+  const variants = cva("", {
+    variants: {
+      dragging: {
+        over: "ring-2 opacity-30",
+        overlay: "ring-2 ring-primary",
+      },
+    },
+  });
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={variants({
+        dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
+      })}
+      {...attributes}
+      {...listeners}
+    >
       {children}
     </div>
   );
