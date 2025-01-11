@@ -23,27 +23,27 @@ export default function BoardColumn({ id, title, tasks }: ColumnProps) {
   });
   const tasksIds = tasks.map((item) => item.id);
   return (
-    <SortableContext
-      items={tasksIds}
-      // strategy={rectSortingStrategy}
+    <Card
+      ref={setNodeRef}
+      className="flex-1 rounded-lg min-h-[300px] bg-background text-foreground"
     >
-      <Card
-        ref={setNodeRef}
-        className="flex-1 rounded-lg min-h-[300px] bg-background text-foreground"
-      >
-        <CardHeader>
-          <CardTitle>
-            {title} | {id}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+      <CardHeader>
+        <CardTitle>
+          {title} | {id}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <SortableContext
+          items={tasksIds}
+          strategy={verticalListSortingStrategy}
+        >
           {tasks.map((item) => (
             <SortableTask task={item} key={item.id}>
               <TaskCard task={item} />
             </SortableTask>
           ))}
-        </CardContent>
-      </Card>
-    </SortableContext>
+        </SortableContext>
+      </CardContent>
+    </Card>
   );
 }

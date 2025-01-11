@@ -10,7 +10,7 @@ const page = async ({ params }: ICompanyPageParams) => {
     <div>
       Board page{company}/ {workspace}
 
-      <KanbanBoard />
+      {/* <KanbanBoard /> */}
 
       <DndTest/>
     </div>

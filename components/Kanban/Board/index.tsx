@@ -151,7 +151,7 @@ const KanbanBoard = () => {
     <DndContext
       sensors={sensors}
       // collisionDetection={closestCenter}
-      // onDragStart={handleDragStart}
+      onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
@@ -160,7 +160,7 @@ const KanbanBoard = () => {
           <SortableContext
             key={column.id}
             items={column.tasks.map((task) => task.id)}
-            // strategy={verticalListSortingStrategy}
+            strategy={verticalListSortingStrategy}
           >
             <BoardColumn
               id={column.id}
@@ -170,13 +170,13 @@ const KanbanBoard = () => {
           </SortableContext>
         ))}
       </div>
-      {/* <DragOverlay>
+      <DragOverlay>
         {activeTask ? (
           <SortableTask task={activeTask} isOverlay>
             <TaskCard task={activeTask} />
           </SortableTask>
         ) : null}
-      </DragOverlay> */}
+      </DragOverlay>
     </DndContext>
   );
 };
