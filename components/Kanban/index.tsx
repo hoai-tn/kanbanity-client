@@ -1,5 +1,8 @@
 "use client";
-import { KanbanBoard as IKanbanBoard, KanbanTask } from "@/types/kanban-board";
+import {
+  IKanbanBoard as IKanbanBoard,
+  IKanbanTask,
+} from "@/types/kanban-board";
 import {
   closestCenter,
   DndContext,
@@ -21,8 +24,8 @@ import {
 import { useState } from "react";
 import { Card, CardContent } from "../ui/card";
 import _ from "lodash";
-import { Column } from "./Column";
 import TaskCard from "./Task/TaskCard";
+import { KanbanColumn } from "./Column";
 const initialData: IKanbanBoard = {
   columns: {
     column1: {
@@ -40,6 +43,11 @@ const initialData: IKanbanBoard = {
       title: "Done",
       taskIds: [],
     },
+    column4: {
+      id: "column4",
+      title: "Hole",
+      taskIds: [],
+    },
   },
   tasks: {
     task1: { id: "task1", title: "Design Landing Page", columnId: "column1" },
@@ -47,11 +55,11 @@ const initialData: IKanbanBoard = {
     task3: { id: "task3", title: "Write Documentation", columnId: "column2" },
     task4: { id: "task4", title: "Write Documentation", columnId: "column1" },
   },
-  columnOrder: ["column1", "column2", "column3"],
+  columnOrder: ["column1", "column2", "column3", "column4"],
 };
 function KanbanBoard() {
   const [board, setBoard] = useState<IKanbanBoard>(initialData);
-  const [activeTask, setActiveTask] = useState<KanbanTask | null>(null);
+  const [activeTask, setActiveTask] = useState<IKanbanTask | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -59,7 +67,7 @@ function KanbanBoard() {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-  const findPositionOfTask = (task: KanbanTask) => {
+  const findPositionOfTask = (task: IKanbanTask) => {
     if (!task) return 0;
     return board.columns[task.columnId].taskIds.indexOf(task.id);
   };
@@ -71,10 +79,12 @@ function KanbanBoard() {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className="grid grid-cols-3 gap-x-5">
+      <div className="flex gap-x-5">
         {board.columnOrder.map((columnId) => {
           const column = board.columns[columnId];
-          return <Column key={columnId} column={column} tasks={board.tasks} />;
+          return (
+            <KanbanColumn key={columnId} column={column} tasks={board.tasks} />
+          );
         })}
       </div>
       <DragOverlay>
@@ -92,7 +102,7 @@ function KanbanBoard() {
     if (active.id === over?.id || !activeTask) return;
 
     const isOverColumnType = over.data.current.type === "column";
-    const overTask: KanbanTask = over.data.current.task;
+    const overTask: IKanbanTask = over.data.current.task;
 
     const activeColumn = board.columns[activeTask.columnId];
     const overColumn =
@@ -150,7 +160,7 @@ function KanbanBoard() {
 
     if (active.id === over?.id) return;
 
-    const overTask: KanbanTask = over.data.current.task;
+    const overTask: IKanbanTask = over.data.current.task;
     if (activeTask?.columnId === overTask.columnId) {
       const activeTaskIndex = findPositionOfTask(activeTask);
       const overTaskIndex = findPositionOfTask(overTask);

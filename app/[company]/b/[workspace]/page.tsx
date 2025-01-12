@@ -1,4 +1,3 @@
-
 import KanbanBoard from "@/components/Kanban";
 import { ICompanyPageParams } from "@/types";
 import React from "react";
@@ -8,7 +7,7 @@ const page = async ({ params }: ICompanyPageParams) => {
   return (
     <div>
       Board page{company}/ {workspace}
-      <KanbanBoard/>
+      <KanbanBoard />
     </div>
   );
 };

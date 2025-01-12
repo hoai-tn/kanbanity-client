@@ -2,11 +2,11 @@ import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { cva } from "class-variance-authority";
-import { KanbanTask } from "@/types/kanban-board";
+import { IKanbanTask } from "@/types/kanban-board";
 import TaskCard from "./TaskCard";
 
 type SortableTaskProps = {
-  task: KanbanTask;
+  task: IKanbanTask;
   isOverlay?: boolean;
 };
 
@@ -27,8 +27,8 @@ const SortableTask = ({ task, isOverlay }: SortableTaskProps) => {
   const variants = cva("", {
     variants: {
       dragging: {
-        over: "ring-2 opacity-30",
-        overlay: "ring-2 ring-primary",
+        over: " opacity-30",
+        overlay: " ring-primary",
       },
     },
   });

@@ -1,23 +1,36 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import React from "react";
 import SortableTask from "../Task/SortableTask";
-import { KanbanColumn, KanbanTask } from "@/types/kanban-board";
+import { IKanbanColumn, IKanbanTask } from "@/types/kanban-board";
 import SortableColumn from "./SortableColumn";
+import { EllipsisVertical, PlusIcon } from "lucide-react";
 
 interface IColumn {
-  column: KanbanColumn;
-  tasks: Record<string, KanbanTask>;
+  column: IKanbanColumn;
+  tasks: Record<string, IKanbanTask>;
 }
-const Column = ({ column, tasks }: IColumn) => {
+const KanbanColumn = ({ column, tasks }: IColumn) => {
   return (
     <SortableColumn key={column.id} column={column}>
-      <Card className="bg-red-300 p-4 max-w-md">
-        <CardHeader>{column.id}</CardHeader>
-        <CardContent>
+      <Card className="w-80 text-task-foreground">
+        <CardHeader className="p-2">
+          <div className="flex flex-row items-center justify-between">
+            <div>
+              {column.title} {column.taskIds.length}
+            </div>
+            <EllipsisVertical />
+          </div>
+        </CardHeader>
+        <CardContent className="px-2 py-0 min-h-20">
           <SortableContext
             items={column.taskIds}
             strategy={verticalListSortingStrategy}
@@ -30,9 +43,15 @@ const Column = ({ column, tasks }: IColumn) => {
             </div>
           </SortableContext>
         </CardContent>
+        <CardFooter className="px-2 py-2">
+          <div className="flex gap-x-2">
+            <PlusIcon />
+            <p>Add Task</p>
+          </div>
+        </CardFooter>
       </Card>
     </SortableColumn>
   );
 };
 
-export default Column;
+export default KanbanColumn;
