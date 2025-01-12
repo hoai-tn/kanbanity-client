@@ -2,15 +2,19 @@ import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { cva } from "class-variance-authority";
-import { Task } from "@/types/kanban-board";
+import { KanbanColumn, KanbanTask } from "@/types/kanban-board";
 
-type SortableTaskProps = {
+type SortableColumnProps = {
   children: React.ReactNode;
-  task: Task;
+  column: KanbanColumn;
   isOverlay?: boolean;
 };
 
-const SortableTask = ({ children, task, isOverlay }: SortableTaskProps) => {
+const SortableColumn = ({
+  children,
+  column,
+  isOverlay,
+}: SortableColumnProps) => {
   const {
     attributes,
     listeners,
@@ -18,7 +22,7 @@ const SortableTask = ({ children, task, isOverlay }: SortableTaskProps) => {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: task.id, data: { task, type: "Task" } });
+  } = useSortable({ id: column.id, data: { type: "column" } });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -47,4 +51,4 @@ const SortableTask = ({ children, task, isOverlay }: SortableTaskProps) => {
   );
 };
 
-export default SortableTask;
+export default SortableColumn;

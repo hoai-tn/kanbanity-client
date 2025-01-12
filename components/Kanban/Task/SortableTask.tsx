@@ -2,12 +2,15 @@ import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { cva } from "class-variance-authority";
-import { Task } from "@/types/kanban-board";
-interface SortableItemProps {
-  task: Task;
+import { KanbanTask } from "@/types/kanban-board";
+import TaskCard from "./TaskCard";
+
+type SortableTaskProps = {
+  task: KanbanTask;
   isOverlay?: boolean;
-}
-export function SortableItem({ task, isOverlay }: SortableItemProps) {
+};
+
+const SortableTask = ({ task, isOverlay }: SortableTaskProps) => {
   const {
     attributes,
     listeners,
@@ -15,19 +18,11 @@ export function SortableItem({ task, isOverlay }: SortableItemProps) {
     transform,
     transition,
     isDragging,
-  } = useSortable({
-    id: task.id,
-    data: {
-      task,
-      type: "task",
-    },
-  });
+  } = useSortable({ id: task.id, data: { task, type: "task" } });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    height: "80px",
-    background: "gray",
   };
   const variants = cva("", {
     variants: {
@@ -47,7 +42,9 @@ export function SortableItem({ task, isOverlay }: SortableItemProps) {
       {...attributes}
       {...listeners}
     >
-      {task.title} | {task.id} { isDragging.toString()}
+      <TaskCard task={task} />
     </div>
   );
-}
+};
+
+export default SortableTask;

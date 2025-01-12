@@ -14,7 +14,7 @@
 //   columns: Column[];
 // }
 // Interface for a single task
-export interface Task {
+export interface KanbanTask {
   id: string; // Unique identifier for the task
   title: string;
   description?: string;
@@ -22,7 +22,7 @@ export interface Task {
 }
 
 // Interface for a single column
-export interface Column {
+export interface KanbanColumn {
   id: string; // Unique identifier for the column
   title: string; // The title of the column
   taskIds: string[]; // Array of task IDs belonging to this column
@@ -30,7 +30,7 @@ export interface Column {
 
 // Interface for the Kanban board
 export interface KanbanBoard {
-  columns: Record<string, Column>; // Object mapping column IDs to column details
-  tasks: Record<string, Task>; // Object mapping task IDs to task details
+  columns: Record<string, KanbanColumn>; // Object mapping column IDs to column details
+  tasks: Record<string, KanbanTask>; // Object mapping task IDs to task details
   columnOrder: string[]; // Array defining the order of columns
 }
