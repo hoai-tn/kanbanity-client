@@ -28,6 +28,7 @@ import { KanbanColumn } from "./Column";
 import { initKanbanBoard } from "@/data/boards";
 import { TaskDetail } from "./Task";
 import { useSidebar } from "../ui/sidebar";
+import TaskDetailMode from "./Task/TaskDetailMode";
 function KanbanBoard() {
   const { toggleSidebar } = useSidebar();
   const [board, setBoard] = useState<IKanbanBoard>(initKanbanBoard);
@@ -63,12 +64,11 @@ function KanbanBoard() {
             );
           })}
         </div>
+        <TaskDetailMode mode="Side"/>
         <DragOverlay>
           {activeTask ? <TaskCard task={activeTask} /> : null}
         </DragOverlay>
       </DndContext>
-      <TaskDetail />
-      <button onClick={toggleSidebar}>Toggle Sidebar</button>
     </div>
   );
   function handleDragStart(event: DragStartEvent) {
