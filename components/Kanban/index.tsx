@@ -29,10 +29,13 @@ import { initKanbanBoard } from "@/data/boards";
 import { TaskDetail } from "./Task";
 import { useSidebar } from "../ui/sidebar";
 import TaskDetailMode from "./Task/TaskDetailMode";
+import { useAppSelector } from "@/lib/hooks";
 function KanbanBoard() {
+  const counter = useAppSelector((state) => state.counter.value)
   const { toggleSidebar } = useSidebar();
   const [board, setBoard] = useState<IKanbanBoard>(initKanbanBoard);
   const [activeTask, setActiveTask] = useState<IKanbanTask | null>(null);
+  const [isOpenTaskDetail, setIsOpenTaskDetail] = useState(false);
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -64,11 +67,14 @@ function KanbanBoard() {
             );
           })}
         </div>
-        <TaskDetailMode mode="Side"/>
+        <TaskDetailMode mode="Side" isOpenMode={isOpenTaskDetail} />
         <DragOverlay>
           {activeTask ? <TaskCard task={activeTask} /> : null}
         </DragOverlay>
       </DndContext>
+      <button onClick={() => setIsOpenTaskDetail((prev) => !prev)}>
+        Toggle {counter}
+      </button>
     </div>
   );
   function handleDragStart(event: DragStartEvent) {

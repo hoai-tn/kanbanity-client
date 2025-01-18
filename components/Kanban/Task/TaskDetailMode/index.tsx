@@ -1,18 +1,19 @@
 import React from "react";
-import ModeSide from "./ModeSide";
+import ModeSidebar from "./ModeSidebar";
 import ModeCenter from "./ModeCenter";
 import { TaskDetail } from "./TaskDetail";
 type Mode = "Side" | "Center" | "Full" | "Default";
 interface TaskDetailModeProps {
   mode?: Mode;
+  isOpenMode: boolean
 }
-const TaskDetailMode = ({ mode = "Default" }: TaskDetailModeProps) => {
+const TaskDetailMode = ({ mode = "Default", isOpenMode }: TaskDetailModeProps) => {
   switch (mode) {
     case "Side":
       return (
-        <ModeSide>
+        <ModeSidebar open={isOpenMode}>
           <TaskDetail />
-        </ModeSide>
+        </ModeSidebar>
       );
     case "Center":
       return (
@@ -22,9 +23,9 @@ const TaskDetailMode = ({ mode = "Default" }: TaskDetailModeProps) => {
       );
     default:
       return (
-        <ModeSide>
+        <ModeSidebar open={isOpenMode}>
           <TaskDetail />
-        </ModeSide>
+        </ModeSidebar>
       );
   }
 };
