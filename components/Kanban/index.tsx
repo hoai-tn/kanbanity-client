@@ -22,45 +22,20 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useState } from "react";
-import { Card, CardContent } from "../ui/card";
 import _ from "lodash";
 import TaskCard from "./Task/TaskCard";
 import { KanbanColumn } from "./Column";
-const initialData: IKanbanBoard = {
-  columns: {
-    column1: {
-      id: "column1",
-      title: "To Do",
-      taskIds: ["task1", "task2", "task4"],
-    },
-    column2: {
-      id: "column2",
-      title: "In Progress",
-      taskIds: ["task3"],
-    },
-    column3: {
-      id: "column3",
-      title: "Done",
-      taskIds: [],
-    },
-    column4: {
-      id: "column4",
-      title: "Hole",
-      taskIds: [],
-    },
-  },
-  tasks: {
-    task1: { id: "task1", title: "Design Landing Page", columnId: "column1" },
-    task2: { id: "task2", title: "Setup CI/CD", columnId: "column1" },
-    task3: { id: "task3", title: "Write Documentation", columnId: "column2" },
-    task4: { id: "task4", title: "Write Documentation", columnId: "column1" },
-  },
-  columnOrder: ["column1", "column2", "column3", "column4"],
-};
+import { initKanbanBoard } from "@/data/boards";
+import { TaskDetail } from "./Task";
+import { useSidebar } from "../ui/sidebar";
+import TaskDetailMode from "./Task/TaskDetailMode";
+import { useAppSelector } from "@/lib/hooks";
 function KanbanBoard() {
-  const [board, setBoard] = useState<IKanbanBoard>(initialData);
+  const counter = useAppSelector((state) => state.counter.value)
+  const { toggleSidebar } = useSidebar();
+  const [board, setBoard] = useState<IKanbanBoard>(initKanbanBoard);
   const [activeTask, setActiveTask] = useState<IKanbanTask | null>(null);
-
+  const [isOpenTaskDetail, setIsOpenTaskDetail] = useState(false);
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -72,25 +47,35 @@ function KanbanBoard() {
     return board.columns[task.columnId].taskIds.indexOf(task.id);
   };
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDragEnd={handleDragEnd}
-    >
-      <div className="flex gap-x-5">
-        {board.columnOrder.map((columnId) => {
-          const column = board.columns[columnId];
-          return (
-            <KanbanColumn key={columnId} column={column} tasks={board.tasks} />
-          );
-        })}
-      </div>
-      <DragOverlay>
-        {activeTask ? <TaskCard task={activeTask} /> : null}
-      </DragOverlay>
-    </DndContext>
+    <div>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="flex gap-x-5">
+          {board.columnOrder.map((columnId) => {
+            const column = board.columns[columnId];
+            return (
+              <KanbanColumn
+                key={columnId}
+                column={column}
+                tasks={board.tasks}
+              />
+            );
+          })}
+        </div>
+        <TaskDetailMode mode="Side" isOpenMode={isOpenTaskDetail} />
+        <DragOverlay>
+          {activeTask ? <TaskCard task={activeTask} /> : null}
+        </DragOverlay>
+      </DndContext>
+      <button onClick={() => setIsOpenTaskDetail((prev) => !prev)}>
+        Toggle {counter}
+      </button>
+    </div>
   );
   function handleDragStart(event: DragStartEvent) {
     const { active } = event;
