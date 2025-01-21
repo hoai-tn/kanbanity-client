@@ -1,4 +1,5 @@
 "use client";
+import "./index.css";
 import {
   IKanbanBoard as IKanbanBoard,
   IKanbanTask,
@@ -26,18 +27,23 @@ import _ from "lodash";
 import TaskCard from "./Task/TaskCard";
 import { KanbanColumn } from "./Column";
 import { initKanbanBoard } from "@/data/boards";
-import { TaskDetail } from "./Task";
 import { useSidebar } from "../ui/sidebar";
-import TaskDetailMode from "./Task/TaskDetailMode";
+import TaskMode from "./Task/TaskMode";
 import { useAppSelector } from "@/lib/hooks";
+import { useTaskContext } from "@/context/TaskContext";
 function KanbanBoard() {
-  const counter = useAppSelector((state) => state.counter.value)
+  const counter = useAppSelector((state) => state.counter.value);
   const { toggleSidebar } = useSidebar();
   const [board, setBoard] = useState<IKanbanBoard>(initKanbanBoard);
   const [activeTask, setActiveTask] = useState<IKanbanTask | null>(null);
+  const { openTaskId, viewMode } = useTaskContext();
   const [isOpenTaskDetail, setIsOpenTaskDetail] = useState(false);
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -55,7 +61,7 @@ function KanbanBoard() {
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
-        <div className="flex gap-x-5">
+        <div className="kanban-board">
           {board.columnOrder.map((columnId) => {
             const column = board.columns[columnId];
             return (
@@ -67,7 +73,7 @@ function KanbanBoard() {
             );
           })}
         </div>
-        <TaskDetailMode mode="Side" isOpenMode={isOpenTaskDetail} />
+        <TaskMode mode={viewMode} isOpenMode={openTaskId !== null} />
         <DragOverlay>
           {activeTask ? <TaskCard task={activeTask} /> : null}
         </DragOverlay>
