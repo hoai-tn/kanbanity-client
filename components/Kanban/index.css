@@ -1,0 +1,6 @@
+.kanban-board {
+  display: grid;
+  grid-template-columns: 320px repeat(auto-fit, 320px);
+  gap: 0 30px;
+  grid-auto-flow: column;
+}

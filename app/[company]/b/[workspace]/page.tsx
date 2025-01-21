@@ -6,7 +6,9 @@ const page = async ({ params }: ICompanyPageParams) => {
   const { company, workspace } = await params;
   return (
     <div>
-      Board page{company}/ {workspace}
+      <h2 className="text-2xl">
+        Board page{company}/ {workspace}
+      </h2>
       <KanbanBoard />
     </div>
   );
