@@ -1,13 +1,14 @@
-import React from "react";
-import ModeSidebar from "./ModeSidebar";
-import ModeCenter from "./ModeCenter";
-import { TaskDetail } from "../TaskDetail";
-import SwitchModeBtn from "./SwitchModeBtn";
-import { useTaskContext } from "@/context/TaskContext";
-import { X } from "lucide-react";
-export type Mode = "Side" | "Center" | "Full" | "Default";
+import React from 'react';
+import ModeSidebar from './ModeSidebar';
+import ModeCenter from './ModeCenter';
+import { TaskDetail } from '../TaskDetail';
+import SwitchModeBtn from './SwitchModeBtn';
+import { useTaskContext } from '@/context/TaskContext';
+import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+export type ModeView = 'Side' | 'Center' | 'Full' | 'Default';
 interface TaskModeProps {
-  mode?: Mode;
+  mode?: ModeView;
   isOpenMode: boolean;
 }
 
@@ -15,29 +16,35 @@ const TaskModeHeader = () => {
   const { closeTask } = useTaskContext();
 
   return (
-    <div className="flex justify-between items-center p-2">
-      <div></div>
-      <div className="flex gap-x-4">
+    <div className='flex h-12 items-center justify-between border-b pl-4 pr-2 text-task-foreground'>
+      <div>
+        <div>
+          <span>...</span> / <span>List</span>
+        </div>
+      </div>
+      <div className='flex gap-x-4'>
         <SwitchModeBtn />
-        <X onClick={closeTask} />
+        <Button onClick={closeTask} variant='ghost' size='icon'>
+          <X />
+        </Button>
       </div>
     </div>
   );
 };
 
-const TaskMode = ({ mode = "Default", isOpenMode }: TaskModeProps) => {
+const TaskMode = ({ mode = 'Default', isOpenMode }: TaskModeProps) => {
   switch (mode) {
-    case "Side":
+    case 'Side':
       return (
         <ModeSidebar open={isOpenMode}>
           <TaskModeHeader />
           <TaskDetail />
         </ModeSidebar>
       );
-    case "Center":
+    case 'Center':
       return (
         <ModeCenter open={isOpenMode}>
-          {/* <TaskModeHeader /> */}
+          <TaskModeHeader />
           <TaskDetail />
         </ModeCenter>
       );
