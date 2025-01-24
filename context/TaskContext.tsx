@@ -17,7 +17,7 @@ const TaskContext = createContext<TaskContextValue | undefined>(undefined);
 
 export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
   const [openTaskId, setOpenTaskId] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<ModeView>("Default");
+  const [viewMode, setViewMode] = useState<ModeView>("Side");
 
   const closeTask = () => setOpenTaskId(null);
   return (

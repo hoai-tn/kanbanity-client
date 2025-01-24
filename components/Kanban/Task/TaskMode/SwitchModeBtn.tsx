@@ -27,8 +27,8 @@ const Icons: { icon: React.ReactNode; mode: ModeView }[] = [
   },
 ];
 const SwitchModeBtn = () => {
-  const { setViewMode } = useTaskContext();
-  const [currentMode, setCurrentMode] = useState<ModeView>('Side');
+  const { viewMode, setViewMode } = useTaskContext();
+  const [currentMode, setCurrentMode] = useState<ModeView>(viewMode);
 
   const handleModeChange = (mode: ModeView) => {
     setViewMode(mode);
@@ -39,7 +39,9 @@ const SwitchModeBtn = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant='ghost' size='icon'>
-          {Icons.find((icon) => icon.mode === currentMode)?.icon}
+          {Icons.find((icon) => icon.mode === currentMode)?.icon ?? (
+            <SidebarCloseIcon />
+          )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='flex w-auto min-w-0'>

@@ -6,7 +6,7 @@ import SwitchModeBtn from './SwitchModeBtn';
 import { useTaskContext } from '@/context/TaskContext';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-export type ModeView = 'Side' | 'Center' | 'Full' | 'Default';
+export type ModeView = 'Side' | 'Center' | 'Full';
 interface TaskModeProps {
   mode?: ModeView;
   isOpenMode: boolean;
@@ -32,25 +32,30 @@ const TaskModeHeader = () => {
   );
 };
 
-const TaskMode = ({ mode = 'Default', isOpenMode }: TaskModeProps) => {
+const TaskMode = ({ mode, isOpenMode }: TaskModeProps) => {
+  const { viewMode } = useTaskContext();
   switch (mode) {
     case 'Side':
       return (
-        <ModeSidebar open={isOpenMode}>
+        <ModeSidebar open={isOpenMode && viewMode === 'Side'}>
           <TaskModeHeader />
           <TaskDetail />
         </ModeSidebar>
       );
     case 'Center':
+      console.log({ center: isOpenMode });
+
       return (
-        <ModeCenter open={isOpenMode}>
-          <TaskModeHeader />
+        <ModeCenter
+          open={isOpenMode && viewMode === 'Center'}
+          header={<TaskModeHeader />}
+        >
           <TaskDetail />
         </ModeCenter>
       );
     default:
       return (
-        <ModeSidebar open={isOpenMode}>
+        <ModeSidebar open={isOpenMode && viewMode === 'Side'}>
           <TaskModeHeader />
           <TaskDetail />
         </ModeSidebar>
