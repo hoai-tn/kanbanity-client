@@ -1,9 +1,9 @@
-import { useTaskContext } from "@/context/TaskContext";
-import { increment } from "@/lib/features/counter/counterSlice";
-import { useAppDispatch } from "@/lib/hooks";
-import clsx from "clsx";
-import { ShieldCloseIcon, X } from "lucide-react";
-import React from "react";
+import { useTaskContext } from '@/context/TaskContext';
+import { increment } from '@/lib/features/counter/counterSlice';
+import { useAppDispatch } from '@/lib/hooks';
+import clsx from 'clsx';
+import { ShieldCloseIcon, X } from 'lucide-react';
+import React from 'react';
 
 interface ModeSideProps {
   children: React.ReactNode;
@@ -17,8 +17,8 @@ const ModeSidebar = ({ children, open }: ModeSideProps) => {
   return (
     <div
       className={clsx(
-        "bg-sidebar h-svh fixed top-0 right-0 max-w-[600px] w-full delay-100 transition-transform",
-        open ? "w-[600px]" : "translate-x-full"
+        'fixed right-0 top-0 h-svh w-full max-w-[600px] bg-sidebar transition-transform delay-100',
+        open ? 'w-[600px]' : 'translate-x-full',
       )}
     >
       {children}
