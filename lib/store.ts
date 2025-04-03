@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import counterReducer from "./features/counter/counterSlice";
+import kanbanReducer from "./features/kanban/kanbanSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       counter: counterReducer,
+      kanban: kanbanReducer,
     },
   });
 };
