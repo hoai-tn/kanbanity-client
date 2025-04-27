@@ -1,11 +1,14 @@
 import React from 'react';
 import ModeSidebar from './ModeSidebar';
 import ModeCenter from './ModeCenter';
-import { TaskDetail } from '../TaskDetail';
 import SwitchModeBtn from './SwitchModeBtn';
 import { useTaskContext } from '@/context/TaskContext';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import TaskDetail from '../TaskDetail';
+import { useAppSelector } from '@/lib/hooks';
+import { selectKanbanBoard } from '@/lib/features/kanban/kanbanSlice';
+
 export type ModeView = 'Side' | 'Center' | 'Full';
 interface TaskModeProps {
   mode?: ModeView;
@@ -33,31 +36,32 @@ const TaskModeHeader = () => {
 };
 
 const TaskMode = ({ mode, isOpenMode }: TaskModeProps) => {
-  const { viewMode } = useTaskContext();
+  const { viewMode, openTaskId } = useTaskContext();
+  const board = useAppSelector(selectKanbanBoard);
+  const currentTask = openTaskId ? board.tasks[openTaskId] : undefined;
+
   switch (mode) {
     case 'Side':
       return (
         <ModeSidebar open={isOpenMode && viewMode === 'Side'}>
           <TaskModeHeader />
-          <TaskDetail />
+          <TaskDetail task={currentTask} />
         </ModeSidebar>
       );
     case 'Center':
-      console.log({ center: isOpenMode });
-
       return (
         <ModeCenter
           open={isOpenMode && viewMode === 'Center'}
           header={<TaskModeHeader />}
         >
-          <TaskDetail />
+          <TaskDetail task={currentTask} />
         </ModeCenter>
       );
     default:
       return (
         <ModeSidebar open={isOpenMode && viewMode === 'Side'}>
           <TaskModeHeader />
-          <TaskDetail />
+          <TaskDetail task={currentTask} />
         </ModeSidebar>
       );
   }

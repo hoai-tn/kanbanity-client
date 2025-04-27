@@ -18,7 +18,21 @@ export interface IKanbanTask {
   id: string; // Unique identifier for the task
   title: string;
   description?: string;
-  columnId: string,
+  columnId: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  assigneeId?: string;
+  subtasks?: {
+    id: string;
+    title: string;
+    completed: boolean;
+  }[];
+  comments?: {
+    id: string;
+    userId: string;
+    content: string;
+    createdAt: Date;
+  }[];
 }
 
 // Interface for a single column
